@@ -9,8 +9,6 @@ let tailPos = [];
 let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
-let totalX, totalY;
-let grid = new Array(rows);
 
 function setup() {
   ellipseMode(CORNER);
@@ -24,12 +22,10 @@ function setup() {
   gameOver = false;
   xSpeed = 0;
   ySpeed = 0;
-  totalX = 0;
-  totalY = 0;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
-  createCanvas(widthSize, heightSize);
+  createCanvas(widthSize, heightSize + 50);
 }
 
 function draw() {
@@ -83,6 +79,9 @@ function drawState() {
   if (Math.floor(x) == 0 || Math.floor(x) == rows - 1 || Math.floor(y) == columns - 1 || Math.floor(y) == 0) {
     gameOver = true;
   }
+  fill(200, 0, 150, 200);
+  rect(0, heightSize, width, height - heightSize);
+  displayScore();
 }
 
 function updatePositions() {
@@ -94,13 +93,21 @@ function fruitCollected() {
   if (Math.floor(x) == fruitX && Math.floor(y) == fruitY) {
     newFruit();
     score += 100;
-    for (let i = tailPos.length - 1; i > 0; i--) {
-      tailPos[i] = tailPos[i - 1];
-    }
-    if (tailPos.length) {
-      tailPos[0] = [x, y];
-    }
+    updateTails();
   }
+}
+
+function displayScore() { 
+  fill('orange');
+  textSize(25);
+  textAlign(CENTER);
+  text('Score:', 50, heightSize + 25);
+  textAlign(CENTER);
+  text(score, 200, heightSize + 25);
+}
+
+function updateTails() {
+  
 }
 
 function newFruit() {
