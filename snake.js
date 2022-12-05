@@ -18,9 +18,10 @@ function setup() {
   score = 0;
   widthSize = 1200;
   heightSize = 800;
-  blockSize = 50;
+  blockSize = 40;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
+  gameOver = false;
   xSpeed = 0;
   ySpeed = 0;
   totalX = 0;
@@ -34,7 +35,10 @@ function setup() {
 function draw() {
   background(0);
   drawState();
-  updatePositions();
+  if (gameOver != true) {
+    updatePositions();
+    fruitCollected();
+  }
 }
 
 function keyPressed() {
@@ -76,11 +80,27 @@ function drawState() {
   circle(fruitX * blockSize, fruitY * blockSize, blockSize);
   fill('blue');
   circle(Math.floor(x) * blockSize, Math.floor(y) * blockSize, blockSize);
+  if (Math.floor(x) == 0 || Math.floor(x) == rows - 1 || Math.floor(y) == columns - 1 || Math.floor(y) == 0) {
+    gameOver = true;
+  }
 }
 
 function updatePositions() {
   x += xSpeed / (blockSize / 4);
   y += ySpeed / (blockSize / 4);
+}
+
+function fruitCollected() {
+  if (Math.floor(x) == fruitX && Math.floor(y) == fruitY) {
+    newFruit();
+    score += 100;
+    for (let i = tailPos.length - 1; i > 0; i--) {
+      tailPos[i] = tailPos[i - 1];
+    }
+    if (tailPos.length) {
+      tailPos[0] = [x, y];
+    }
+  }
 }
 
 function newFruit() {
