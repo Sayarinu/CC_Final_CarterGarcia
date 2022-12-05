@@ -6,37 +6,28 @@ let widthSize;
 let heightSize;
 let xPos, yPos, fruitX, fruitY, score;
 let tailPos = [];
-let direction;
-let grid = new Array(24);
+let rows, columns;
+let xSpeed, ySpeed;
+let blockSize;
+let totalX, totalY;
+let grid = new Array(rows);
 
 function setup() {
-  direction = "unset";
-  for (let i = 0; i < grid.length; i++) {
-    grid[i] = new Array(16);
-    if (i == 0 || i == (grid.length - 1)) {
-      for (let j = 0; j < grid[i].length; j++) {
-        grid[i][j] = "edge";
-      }
-    } else if (i > 0 && i < grid.length - 1) {
-      grid[i][0] = "edge";
-      grid[i][15] = "edge";
-    }
-  }
   ellipseMode(CORNER);
   rectMode(CORNER);
   score = 0;
   widthSize = 1200;
   heightSize = 800;
-  x = Math.floor((random(100, widthSize - 100)) / 50);
-	y = Math.floor((random(100, heightSize - 100)) / 50);
-  fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-	fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-  while(x != fruitX && y != fruitY) {
-    fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-    fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-  }
-  grid[fruitX][fruitY] = "fruit";
-  grid[x][y] = "playerHead";
+  blockSize = 50;
+  rows = widthSize / blockSize;
+  columns = heightSize / blockSize;
+  xSpeed = 0;
+  ySpeed = 0;
+  totalX = 0;
+  totalY = 0;
+  x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
+  y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
+  newFruit();
   createCanvas(widthSize, heightSize);
 }
 
@@ -47,102 +38,52 @@ function draw() {
 }
 
 function keyPressed() {
-  switch(keyCode) {
-    case(87): // w
-      if (direction != "down") {
-        direction = "up";
-      }
-      break;
-    case(83): // s
-      if (direction != "up") {
-        direction = "down";
-      }
-      break;
-    case(65): // a
-      if (direction != "right") {
-        direction = "left";
-      }
-      break;
-    case(68): // d
-      if (direction != "left") {
-        direction = "right";
-      }
-      break;
+  if (key == 'w' || keyCode == UP_ARROW) {
+    if (ySpeed != 1) {
+      xSpeed = 0;
+      ySpeed = -1;
+    }
   }
-}
-
-function drawState() {
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[i].length; j++) {
-      switch(grid[i][j]) {
-        case("fruit"):
-          fill('red');
-          circle(i * 50, j * 50, 50);
-          break;
-        case("edge"):
-          fill('white');
-          rect(i * 50, j * 50, 50);
-          break;
-        case("playerHead"):
-          fill('blue');
-          x = i;
-          y = j;
-          circle(i * 50, j * 50, 50);
-          break;
-      }
+  else if (key == 's' || keyCode == DOWN_ARROW) {
+    if (ySpeed != -1) {
+      xSpeed = 0;
+      ySpeed = 1;
+    }
+  }
+  else if (key == 'a' || keyCode == LEFT_ARROW) {
+    if (xSpeed != 1) {
+      xSpeed = -1;
+      ySpeed = 0;
+    }
+  }
+  else if (key == 'd' || keyCode == RIGHT_ARROW) {
+    if (xSpeed != -1) {
+      xSpeed = 1;
+      ySpeed = 0;
     }
   }
 }
 
-function updatePositions() {
-  switch(direction) {
-    case("down"):
-      if (grid[x][y + 1] == "fruit") {
-        while(x != fruitX && y + 1 != fruitY) {
-          fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-          fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-        }
-        score += 10;
-      } else if (grid[x][y + 1] != "edge") {
-        grid[x][y + 1] = "empty";
-        grid[x][y + 1] = "player";
-      }
-      break;
-    case("up"):
-      if (grid[x][y - 1] == "fruit") {
-        while(x != fruitX && y - 1 != fruitY) {
-          fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-          fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-        }
-        score += 10;
-      } else if (grid[x][y + 1] != "edge") {
-        grid[x][y - 1] = "empty";
-        grid[x][y - 1] = "player";
-      }
-      break;
-    case("right"):
-      if (grid[x + 1][y] == "fruit") {
-        while(x + 1 != fruitX && y != fruitY) {
-          fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-          fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-        }
-        score += 10;
-      } else if (grid[x][y + 1] != "edge") {
-        grid[x + 1][y] = "empty";
-        grid[x + 1][y] = "player";
-      }
-      break;
-    case("left"):
-      if (grid[x - 1][y] == "fruit") {
-        while(x - 1 != fruitX && y != fruitY) {
-          fruitX = Math.floor((random(100, widthSize - 100)) / 50);
-          fruitY = Math.floor((random(100, heightSize - 100)) / 50);
-        }
-        score += 10;
-      } else if (grid[x][y + 1] != "edge") {
-        grid[x - 1][y] = "empty";
-        grid[x - 1][y] = "player";
-      }
-      break;
+function drawState() {
+  fill('white');
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      if (i == 0 || i == rows - 1 || j == 0 || j == columns - 1)
+        rect(i * blockSize, j * blockSize, blockSize, blockSize);
+    }
   }
+  fill('red');
+  circle(fruitX * blockSize, fruitY * blockSize, blockSize);
+  fill('blue');
+  circle(Math.floor(x) * blockSize, Math.floor(y) * blockSize, blockSize);
+}
+
+function updatePositions() {
+  x += xSpeed / (blockSize / 4);
+  y += ySpeed / (blockSize / 4);
+}
+
+function newFruit() {
+  fruitX = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
+  fruitY = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
 }
