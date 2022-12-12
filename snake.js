@@ -32,7 +32,7 @@ function setup() {
   rectMode(CORNER);
   widthSize = 1200;
   heightSize = 800;
-  blockSize = 40;
+  blockSize = 100;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
@@ -129,8 +129,8 @@ function endGame() {
 }
 
 function updatePositions() {
-  changeX += xSpeed / (blockSize / 10);
-  changeY += ySpeed / (blockSize / 10);
+  changeX += xSpeed / (blockSize / 5);
+  changeY += ySpeed / (blockSize / 5);
 	if (changeX < -1 || changeX > 1 || changeY < -1 || changeY > 1) {
 		updateTails();
 		if (changeX < -1) {
@@ -158,22 +158,13 @@ function fruitCollected() {
   if (x == fruitX && y == fruitY) {
 		fruitNoise.play();
 		tails.push([x, y]);
-		reroll();
+		newFruit();
     score += 100;
   }
 }
 
-function reroll() {
-	valid = 0;
-	newFruit();
-	for (let i = 0; i < tails.length; i++) {
-		if (fruitX != tails[i][0] && fruitY != tails[i][1]) {
-			valid++;
-		}
-	}
-	if (valid != tails.length) {
-		reroll();
-	}
+function reroll() { // rerolls fruit if it is invalid
+
 }
 
 function displayScore() { 
@@ -198,7 +189,4 @@ function updateTails() {
 function newFruit() {
   fruitX = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   fruitY = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
-	while (fruitX == x && fruitY == y) {
-		newFruit();
-	}
 }
