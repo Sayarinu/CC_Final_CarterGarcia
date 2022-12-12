@@ -96,12 +96,17 @@ function drawState() {
   fill('red');
   circle(fruitX * blockSize, fruitY * blockSize, blockSize);
   fill('blue');
-  circle(Math.floor(x) * blockSize, Math.floor(y) * blockSize, blockSize);
-	fill('yellow');
-	circle(Math.floor(tails[0][0]) * blockSize, Math.floor(tails[0][1]) * blockSize, blockSize);
+  circle(x * blockSize, y * blockSize, blockSize);
+	if (tails.length > 0) {
+		fill('yellow');
+		for (let i = 0; i < tails.length; i++) {
+			circle(tails[i][0] * blockSize, tails[i][1] * blockSize, blockSize);
+		}
+	}
   if (Math.floor(x) == 0 || Math.floor(x) == rows - 1 || Math.floor(y) == columns - 1 || Math.floor(y) == 0) {
-		if (gameOver == false)
+		if (gameOver == false) {
 			deathSound.play();
+		}
     gameOver = true;
   }
   fill(200, 0, 150, 200);
@@ -133,6 +138,7 @@ function updatePositions() {
 function fruitCollected() {
   if (Math.floor(x) == fruitX && Math.floor(y) == fruitY) {
 		fruitNoise.play();
+		tails.push([x, y]);
     newFruit();
     score += 100;
   }
@@ -148,6 +154,10 @@ function displayScore() {
 }
 
 function updateTails() {
+	for (let i = (tails.length - 1); i > 0; i--) {
+		tails[i] = tails[i - 1];
+	}
+	
 	if (tails.length > 0) {
 		tails[0] = [x, y];
 	}
