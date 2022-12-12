@@ -13,6 +13,7 @@ let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
 let speedModifier;
+let updateFrames;
 
 
 // BGM music found at https://youtu.be/ptrI2TZnVYU?list=PLBE459782E55DE0D8
@@ -48,7 +49,8 @@ function restartGame() {
 	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
-	speedModifier = blockSize / 4;
+	updateFrames = 4;
+	speedModifier = blockSize / updateFrames;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
