@@ -7,7 +7,7 @@ let turningSound;
 let widthSize;
 let heightSize;
 let xPos, yPos, fruitX, fruitY, score;
-let tails = [];
+let tails;
 let changeX, changeY;
 let rows, columns;
 let xSpeed, ySpeed;
@@ -29,12 +29,17 @@ function setup() {
 	backgroundMusic.play();
   ellipseMode(CORNER);
   rectMode(CORNER);
-  score = 0;
   widthSize = 1200;
   heightSize = 800;
   blockSize = 40;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
+  restartGame();
+}
+
+function restartGame() {
+	tails = [];
+	score = 0;
   gameOver = false;
 	changeX = 0;
 	changeY = 0;
@@ -82,7 +87,10 @@ function keyPressed() {
       xSpeed = 1;
       ySpeed = 0;
     }
-  }
+  } else if (key == 'r') {
+		if (gameOver == true)
+			restartGame();
+	}
 }
 
 function drawState() {
