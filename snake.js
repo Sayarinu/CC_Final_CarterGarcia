@@ -12,6 +12,7 @@ let changeX, changeY;
 let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
+let valid;
 
 
 // BGM music found at https://youtu.be/ptrI2TZnVYU?list=PLBE459782E55DE0D8
@@ -41,6 +42,7 @@ function restartGame() {
 	tails = [];
 	score = 0;
   gameOver = false;
+	valid = 0;
 	changeX = 0;
 	changeY = 0;
   xSpeed = 0;
@@ -153,12 +155,25 @@ function updatePositions() {
 }
 
 function fruitCollected() {
-  if (Math.floor(x) == fruitX && Math.floor(y) == fruitY) {
+  if (x == fruitX && y == fruitY) {
 		fruitNoise.play();
 		tails.push([x, y]);
-    newFruit();
+		reroll();
     score += 100;
   }
+}
+
+function reroll() {
+	valid = 0;
+	newFruit();
+	for (let i = 0; i < tails.length; i++) {
+		if (fruitX != tails[i][0] && fruitY != tails[i][1]) {
+			valid++;
+		}
+	}
+	if (valid != tails.length) {
+		reroll();
+	}
 }
 
 function displayScore() { 
@@ -183,4 +198,7 @@ function updateTails() {
 function newFruit() {
   fruitX = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   fruitY = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
+	while (fruitX == x && fruitY == y) {
+		newFruit();
+	}
 }
