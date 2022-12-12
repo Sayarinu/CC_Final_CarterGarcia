@@ -12,7 +12,7 @@ let changeX, changeY;
 let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
-let valid;
+let speedModifier;
 
 
 // BGM music found at https://youtu.be/ptrI2TZnVYU?list=PLBE459782E55DE0D8
@@ -33,6 +33,7 @@ function setup() {
   widthSize = 1200;
   heightSize = 800;
   blockSize = 100;
+	speedModifier = 20;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
@@ -47,6 +48,7 @@ function restartGame() {
 	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
+	speedModifier = blockSize / 4;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
@@ -129,8 +131,8 @@ function endGame() {
 }
 
 function updatePositions() {
-  changeX += xSpeed / (blockSize / 5);
-  changeY += ySpeed / (blockSize / 5);
+  changeX += xSpeed / (blockSize / speedModifier);
+  changeY += ySpeed / (blockSize / speedModifier);
 	if (changeX < -1 || changeX > 1 || changeY < -1 || changeY > 1) {
 		updateTails();
 		if (changeX < -1) {
