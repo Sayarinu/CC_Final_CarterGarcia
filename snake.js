@@ -2,15 +2,31 @@
 // Made by Carter Garcia
 
 let gameOver;
+let backgroundMusic;
+let turningSound;
 let widthSize;
 let heightSize;
 let xPos, yPos, fruitX, fruitY, score;
-let tailPos = [];
+let tails = [];
+let changeX, changeY;
 let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
 
+
+// BGM music found at https://youtu.be/ptrI2TZnVYU?list=PLBE459782E55DE0D8
+function preload() {
+  backgroundMusic = loadSound("BGM.wav");
+	backgroundMusic.setVolume(0.06);
+	// Sound effects made by me
+	fruitNoise = loadSound("FruitNoise.mp3");
+	fruitNoise.setVolume(0.06);
+	deathSound = loadSound("PlayerDeath.mp3");
+	deathSound.setVolume(0.06);
+}
+
 function setup() {
+	backgroundMusic.play();
   ellipseMode(CORNER);
   rectMode(CORNER);
   score = 0;
@@ -20,6 +36,8 @@ function setup() {
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   gameOver = false;
+	changeX = 0;
+	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
@@ -29,8 +47,11 @@ function setup() {
 }
 
 function draw() {
+	if (backgroundMusic.isPlaying() == false) {
+		backgroundMusic.play();
+	}
   background(0);
-  drawState();
+	drawState();
   if (gameOver != true) {
     updatePositions();
     fruitCollected();
@@ -76,7 +97,11 @@ function drawState() {
   circle(fruitX * blockSize, fruitY * blockSize, blockSize);
   fill('blue');
   circle(Math.floor(x) * blockSize, Math.floor(y) * blockSize, blockSize);
+	fill('yellow');
+	circle(Math.floor(tails[0][0]) * blockSize, Math.floor(tails[0][1]) * blockSize, blockSize);
   if (Math.floor(x) == 0 || Math.floor(x) == rows - 1 || Math.floor(y) == columns - 1 || Math.floor(y) == 0) {
+		if (gameOver == false)
+			deathSound.play();
     gameOver = true;
   }
   fill(200, 0, 150, 200);
@@ -85,15 +110,31 @@ function drawState() {
 }
 
 function updatePositions() {
-  x += xSpeed / (blockSize / 4);
-  y += ySpeed / (blockSize / 4);
+  changeX += xSpeed / (blockSize / 10);
+  changeY += ySpeed / (blockSize / 10);
+	if (changeX < -1 || changeX > 1 || changeY < -1 || changeY > 1) {
+		updateTails();
+		if (changeX < -1) {
+			x -= 1;
+			changeX = 0;
+		} else if (changeX > 1) {
+			x += 1;
+			changeX = 0;
+		} else if (changeY < -1) {
+			y -= 1;
+			changeY = 0;
+		} else {
+			y += 1;
+			changeY = 0;
+		 }
+	}
 }
 
 function fruitCollected() {
   if (Math.floor(x) == fruitX && Math.floor(y) == fruitY) {
+		fruitNoise.play();
     newFruit();
     score += 100;
-    updateTails();
   }
 }
 
@@ -107,7 +148,9 @@ function displayScore() {
 }
 
 function updateTails() {
-  
+	if (tails.length > 0) {
+		tails[0] = [x, y];
+	}
 }
 
 function newFruit() {
