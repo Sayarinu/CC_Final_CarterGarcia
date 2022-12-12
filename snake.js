@@ -12,8 +12,8 @@ let changeX, changeY;
 let rows, columns;
 let xSpeed, ySpeed;
 let blockSize;
+let highScore;
 let speedModifier;
-let updateFrames;
 
 
 // BGM music found at https://youtu.be/ptrI2TZnVYU?list=PLBE459782E55DE0D8
@@ -31,9 +31,10 @@ function setup() {
 	backgroundMusic.play();
   ellipseMode(CORNER);
   rectMode(CORNER);
+	highScore = 0;
   widthSize = 1200;
   heightSize = 800;
-  blockSize = 50;
+  blockSize = 40;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
@@ -43,12 +44,11 @@ function restartGame() {
 	tails = [];
 	score = 0;
   gameOver = false;
-	valid = 0;
 	changeX = 0;
 	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
-	speedModifier = 10;
+	speedModifier = 4;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
@@ -59,13 +59,13 @@ function draw() {
 	if (backgroundMusic.isPlaying() == false) {
 		backgroundMusic.play();
 	}
+  background(0);
+	drawState();
   if (gameOver != true) {
-		background(0);
-		drawState();
     updatePositions();
     fruitCollected();
   } else {
-		background(255);
+		updateHighScore();
 	}
 }
 
@@ -176,8 +176,9 @@ function displayScore() {
   textSize(25);
   textAlign(CENTER);
   text('Score:', 50, heightSize + 25);
-  textAlign(CENTER);
   text(score, 200, heightSize + 25);
+	text('High Score:', width / 2 + 50, heightSize + 25);
+  text(highScore, width / 2 + 200, heightSize + 25);
 }
 
 function updateTails() {
@@ -190,10 +191,17 @@ function updateTails() {
 	}
 }
 
+function updateHighScore() {
+	if (score > highScore) {
+		highScore = score;
+	}
+}
+
+
 function newFruit() {
 	let flag = 0;
-  fruitX = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
-  fruitY = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
+  	fruitX = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
+  	fruitY = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
 	if (fruitX == x && fruitY == y) {
 		newFruit();
 	}
