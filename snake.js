@@ -112,14 +112,18 @@ function drawState() {
 		}
 	}
   if (Math.floor(x) == 0 || Math.floor(x) == rows - 1 || Math.floor(y) == columns - 1 || Math.floor(y) == 0) {
-		if (gameOver == false) {
-			deathSound.play();
-		}
-    gameOver = true;
+		endGame();
   }
   fill(200, 0, 150, 200);
   rect(0, heightSize, width, height - heightSize);
   displayScore();
+}
+
+function endGame() {
+		if (gameOver == false) {
+			deathSound.play();
+		}
+    gameOver = true;
 }
 
 function updatePositions() {
@@ -140,6 +144,11 @@ function updatePositions() {
 			y += 1;
 			changeY = 0;
 		 }
+	}
+	for (let i = 1; i < tails.length - 1; i++) {
+		if (tails[i][0] == x && tails[i][1] == y) {
+			endGame();
+		}
 	}
 }
 
