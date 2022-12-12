@@ -31,9 +31,9 @@ function setup() {
 	backgroundMusic.play();
   ellipseMode(CORNER);
   rectMode(CORNER);
-  widthSize = 800;
+  widthSize = 1200;
   heightSize = 800;
-  blockSize = 200;
+  blockSize = 50;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
