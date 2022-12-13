@@ -100,13 +100,18 @@ function keyPressed() {
 }
 
 function drawState() {
-  fill('white');
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
+			fill(255, 255, 255, 5);
+			stroke(255, 255, 255, 5);
+			line(i * blockSize, 0, i * blockSize, heightSize);
+			line(0, j * blockSize, widthSize, j * blockSize);
+			fill('white');
       if (i == 0 || i == rows - 1 || j == 0 || j == columns - 1)
         rect(i * blockSize, j * blockSize, blockSize, blockSize);
     }
   }
+	stroke('black');
   fill('red');
   circle(fruitX * blockSize, fruitY * blockSize, blockSize);
   fill('blue');
