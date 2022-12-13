@@ -34,7 +34,7 @@ function setup() {
 	highScore = 0;
   widthSize = 1200;
   heightSize = 800;
-  blockSize = 50;
+  blockSize = 80;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
@@ -48,7 +48,7 @@ function restartGame() {
 	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
-	speedModifier = 5;
+	speedModifier = 10;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
@@ -71,25 +71,25 @@ function draw() {
 
 function keyPressed() {
   if (key == 'w' || keyCode == UP_ARROW) {
-    if (ySpeed != 1) {
+    if (ySpeed != 1 && (changeY < 0.5 || changeY > -0.5)) {
       xSpeed = 0;
       ySpeed = -1;
     }
   }
   else if (key == 's' || keyCode == DOWN_ARROW) {
-    if (ySpeed != -1) {
+    if (ySpeed != -1 && (changeY < 0.25 || changeY > -0.25)) {
       xSpeed = 0;
       ySpeed = 1;
     }
   }
   else if (key == 'a' || keyCode == LEFT_ARROW) {
-    if (xSpeed != 1) {
+    if (xSpeed != 1 && (changeX < 0.5 || changeX > -0.5)) {
       xSpeed = -1;
       ySpeed = 0;
     }
   }
   else if (key == 'd' || keyCode == RIGHT_ARROW) {
-    if (xSpeed != -1) {
+    if (xSpeed != -1 && (changeX < 0.5 || changeX > -0.5)) {
       xSpeed = 1;
       ySpeed = 0;
     }
