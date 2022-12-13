@@ -34,7 +34,7 @@ function setup() {
 	highScore = 0;
   widthSize = 1200;
   heightSize = 800;
-  blockSize = 40;
+  blockSize = 50;
   rows = widthSize / blockSize;
   columns = heightSize / blockSize;
   restartGame();
@@ -48,7 +48,7 @@ function restartGame() {
 	changeY = 0;
   xSpeed = 0;
   ySpeed = 0;
-	speedModifier = 4;
+	speedModifier = 5;
   x = Math.floor((random(blockSize, widthSize - blockSize)) / blockSize);
   y = Math.floor((random(blockSize, heightSize - blockSize)) / blockSize);
   newFruit();
