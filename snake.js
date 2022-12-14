@@ -54,7 +54,7 @@ function restartGame() { // Sets the game state
 		blockSize = 50;
 	} else {
 		// easy mode
-		speedModifier = 10;
+		speedModifier = 12;
 		blockSize = 80;
 	}
 	rows = widthSize / blockSize; // Sets our rows based on the difficulty
